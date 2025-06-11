@@ -1,11 +1,11 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-const { validationResult } = require("express-validation");
+const { validationResult } = require("express-validator");
 
 exports.register = async (req, res) => {
     const errors = validationResult(req);
-    if(!errors.isEmtpy()){
-        return res.status(400).json({ errors: errors.array });
+    if(!errors.isEmpty()){ // <--- CORRECTED
+        return res.status(400).json({ errors: errors.array() });
     }
 
     const { username, email, password } = req.body;
@@ -30,11 +30,11 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     const errors = validationResult(req);
-    if(!errors.isEmtpy()){
+    if(!errors.isEmpty()){
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { username, email, password } = req.body;
+    const { email, password } = req.body;
 
     try{
         const user = await User.findOne({ email }).select("+password");
@@ -44,7 +44,7 @@ exports.login = async (req, res) => {
         
         const isMatch = await User.matchPasword(password);
 
-        if(!ismatch){
+        if(!isMatch){
             return res.status(400).json({ msg: "Invalid Credentials" });
         }
 
@@ -68,4 +68,13 @@ exports.getMe = async (req, res) => {
     }
 };
 
-c
+const sendTokenResponse = (user, statusCode, res) => {
+    const token = user.getSignedJwtToken();
+
+    // const options = {
+    //     expires: new Date(Date.now() + parseInt(process.env.JWT_COOKIE_EXPIRE || '30') * 24 * 60 * 60 * 1000),
+    //     httpOnly: true
+    // };
+
+    res.status(statusCode).json({ success: true, token})
+};
