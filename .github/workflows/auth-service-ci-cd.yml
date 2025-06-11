@@ -13,13 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Debug Workspace Contents # <<--- ADD THIS STEP
-        run: |
-          echo "Current directory: $(pwd)"
-          echo "Listing files at workspace root:"
-          ls -la
-          echo "--- End of Listing ---"
-
       - name: Checkout Auth Service Code
         uses: actions/checkout@v4
 
@@ -35,8 +28,6 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./Dockerfile
           push: true
           tags: |
               ahmedthemagnificent/auth-service:latest
@@ -60,7 +51,7 @@ jobs:
         run: |
          kubectl apply -f deployment.yaml
          kubectl apply -f service.yaml
-         kubectl rollout restart deployment/ui-service
+         kubectl rollout restart deployment/auth-service
 
 
 
