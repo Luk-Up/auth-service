@@ -28,9 +28,7 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
-          context: ./auth-service 
           push: true
-          file: ./Dockerfile
           tags: |
               ahmedthemagnificent/auth-service:latest
               ahmedthemagnificent/auth-service:${{ github.sha }}
