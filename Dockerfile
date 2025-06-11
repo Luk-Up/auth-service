@@ -1,7 +1,7 @@
 # Step 1: Use the official Node.js image as the base image
 FROM node:18-alpine AS builder
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY package*.json .
 
@@ -11,11 +11,9 @@ COPY . .
 
 FROM node:18-alpine AS final
 
-WORKDIR /usr/src/app
+COPY --from=builder /app /app
 
-COPY --from=builder /usr/src/app/node_modules ./node_modules
-
-COPY --from=builder /usr/src/app .
+WORKDIR /app
 
 EXPOSE 5000
 
