@@ -13,6 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Debug Workspace Contents # <<--- ADD THIS STEP
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Listing files at workspace root:"
+          ls -la
+          echo "--- End of Listing ---"
+
       - name: Checkout Auth Service Code
         uses: actions/checkout@v4
 
