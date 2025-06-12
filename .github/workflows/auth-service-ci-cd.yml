@@ -1,5 +1,4 @@
 name: Auth service CI/CD pipeline
-
 on:
   push:
     branches:
